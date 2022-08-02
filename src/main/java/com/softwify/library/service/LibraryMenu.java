@@ -1,0 +1,47 @@
+package com.softwify.library.service;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softwify.library.configuration.DataBaseConfig;
+import com.softwify.library.configuration.DefaultDataBaseConfig;
+import com.softwify.library.dao.AuthorDao;
+import com.softwify.library.util.OptionSelector;
+
+public class LibraryMenu {
+	private static final Logger logger = LogManager.getLogger(LibraryMenu.class.getSimpleName());
+
+	private static OptionSelector optionSelector = new OptionSelector();
+	private static DataBaseConfig dataBaseConfig = new DefaultDataBaseConfig();
+	private static AuthorDao authorDAO = new AuthorDao(dataBaseConfig);
+	private static AuthorManager authorManager = new AuthorManager(authorDAO);
+
+	public static void loadApp() {
+		System.out.println("Bienvenue à la Bibliothèque");
+
+		boolean continueApp = true;
+
+		while (continueApp) {
+			loadMenu();
+			int option = optionSelector.readInt();
+			switch (option) {
+			case 1: {
+				authorManager.displayAuthors();
+				continueApp = false;
+				break;
+			}
+			case 0: {
+				System.exit(option);
+			}
+			default:
+				logger.error("S'il vous plait veillez entrer une valeur correcte");
+				break;
+			}
+		}
+	}
+
+	private static void loadMenu() {
+		System.out.println("Que voulez-vous faire ?\n" + "1 - Gestion des auteurs\n" + "2 - Gestion des livres\n"
+				+ "0 - Quitter la bibliothèque \n" + "--------------------------------------------");
+	}
+}
