@@ -48,4 +48,23 @@ public class AuthorDao {
 
 		return authors;
 	}
+
+	public boolean deleteAuthor(int id) {
+		Connection connection = null;
+		boolean deleted = false;
+		try {
+			connection = dataBaseConfig.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.DELETE_AUTHOR);
+			preparedStatement.setInt(1, id);
+			int affectedRows = preparedStatement.executeUpdate();
+			deleted = affectedRows == 1;
+			dataBaseConfig.closePreparedStatement(preparedStatement);
+		} catch (SQLException | ClassNotFoundException e) {
+			logger.error("An error has occurred", e);
+		} finally {
+			dataBaseConfig.closeConnection(connection);
+		}
+
+		return deleted;
+	}
 }

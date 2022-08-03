@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 public class OptionSelector {
 	private static Scanner scanner = new Scanner(System.in);
 	private static final Logger logger = LogManager.getLogger(OptionSelector.class.getSimpleName());
+	public String[] substring;
+	public int[] subs;
 
 	public int readInt() {
 		try {
