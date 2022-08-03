@@ -34,7 +34,6 @@ public class AuthorManager {
 	}
 
 	private boolean delete(int id) {
-		// List<Author> authors = authorDAO.getAuthors();
 		boolean result = false;
 		result = authorDAO.deleteAuthor(id);
 
@@ -42,8 +41,11 @@ public class AuthorManager {
 			System.out.println("L'auteur et ses livres ont ete supprimes avec succes.\r\n" + "\r\n"
 					+ "Tapez \"ENTER\" pour retourner\r\n" + "-------------------------");
 			nextAction();
+		} else {
+			System.out.println(
+					"L'index que vous avez choisir n'est pas dans la base de donne veuillez entrer un index correspondent.");
+			selectNextAction();
 		}
-
 		return false;
 	}
 
@@ -79,7 +81,7 @@ public class AuthorManager {
 		while (continueApp) {
 			String option = optionSelector.readString();
 			switch (option) {
-			case "enter": {
+			case "": {
 				displayAuthors();
 				break;
 			}
