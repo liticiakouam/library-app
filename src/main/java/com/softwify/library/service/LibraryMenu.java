@@ -14,10 +14,10 @@ public class LibraryMenu {
 	private static OptionSelector optionSelector = new OptionSelector();
 	private static DataBaseConfig dataBaseConfig = new DefaultDataBaseConfig();
 	private static AuthorDao authorDAO = new AuthorDao(dataBaseConfig);
-	private static AuthorManager authorManager = new AuthorManager(authorDAO);
+	private static AuthorManager authorManager = new AuthorManager(authorDAO, optionSelector);
 
 	public static void loadApp() {
-		System.out.println("Bienvenue à la Bibliothèque");
+		System.out.println("Bienvenue a la Bibliotheque");
 
 		boolean continueApp = true;
 
@@ -26,7 +26,7 @@ public class LibraryMenu {
 			int option = optionSelector.readInt();
 			switch (option) {
 			case 1: {
-				authorManager.displayAuthors();
+				authorManager.manage();
 				continueApp = false;
 				break;
 			}

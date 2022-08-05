@@ -12,8 +12,11 @@ public class DataBasePrepareService {
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
+			connection.prepareStatement("delete from author").execute();
+			connection.prepareStatement("alter table author AUTO_INCREMENT = 1").execute();
+
 			// clear author entries;
-			connection.prepareStatement("truncate table author").execute();
+			// connection.prepareStatement("truncate table author").execute();
 
 			final String INSERT_AUTHORS = "INSERT INTO `author` (`id`, `lastname`, `firstname`) " + "VALUES\r\n"
 					+ "(3, 'Mcsween', 'Pierre-Yves'),\r\n" + "(5, 'Niang', 'Thione'),\r\n"
