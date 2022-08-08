@@ -38,27 +38,31 @@ public class AuthorManager {
 			String option = substring[0];
 
 			switch (option) {
-			case "back": {
-				LibraryMenu.loadApp();
-				continueSection = false;
-				break;
-			}
-			case "delete": {
-				try {
-					int id = Integer.parseInt(substring[1]);
-					boolean deleted = delete(id);
-					if (deleted) {
-						returnToList();
-					}
-				} catch (NumberFormatException e) {
-					logger.error(substring[1]
-							+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+				case "back": {
+					addAuthor();
+					continueSection = false;
+					break;
 				}
-				break;
-			}
-			default:
-				logger.error("L'action que vous avez effectuer n'est pas correcte, veuillez entrer la valeur requise");
-				break;
+				case "delete": {
+					try {
+						int id = Integer.parseInt(substring[1]);
+						boolean deleted = delete(id);
+						if (deleted) {
+							returnToList();
+						}
+					} catch (NumberFormatException e) {
+						logger.error(substring[1]
+								+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+					}
+					break;
+				}
+				case "add": {
+							addAuthor();
+							authorDAO.addAuthor();
+				}
+				default:
+					logger.error("L'action que vous avez effectuer n'est pas correcte, veuillez entrer la valeur requise");
+					break;
 			}
 		}
 	}
@@ -88,5 +92,13 @@ public class AuthorManager {
 		System.out.println("Tapez \"ENTER\" pour retourner\r\n" + "-------------------------");
 		optionSelector.readString();
 		displayAuthors();
+	}
+
+	public void addAuthor() {
+		System.out.println("Ajout d'un nouvel auteur");
+		System.out.print("Entrez le prénom de l'auteur : ");
+		String prenom = optionSelector.readString();
+		System.out.println("Entrez le nom de l'auteur : ");
+		String nom = optionSelector.readString();
 	}
 }

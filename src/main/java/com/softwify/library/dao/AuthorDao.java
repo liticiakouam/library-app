@@ -67,4 +67,21 @@ public class AuthorDao {
 
 		return deleted;
 	}
+
+	public boolean addAuthor(Author author) {
+		Connection connection = null;
+		boolean insert = false;
+		try {
+			connection = dataBaseConfig.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.ADD_AUTHOR);
+			preparedStatement.setString(2, author.getFullName());
+			insert = preparedStatement.execute();
+			dataBaseConfig.closePreparedStatement(preparedStatement);
+		} catch (SQLException | ClassNotFoundException e) {
+			logger.error("An error has occurred", e);
+		} finally {
+			dataBaseConfig.closeConnection(connection);
+		}
+		return insert;
+	}
 }
