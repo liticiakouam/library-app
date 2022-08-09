@@ -12,11 +12,11 @@ import com.softwify.library.util.OptionSelector;
 public class AuthorManager {
 
 	private static final Logger logger = LogManager.getLogger(AuthorManager.class.getSimpleName());
-	private final AuthorDao authorDAO;
+	private final AuthorDao authorDao;
 	private final OptionSelector optionSelector;
 
-	public AuthorManager(AuthorDao authorDAO, OptionSelector optionSelector) {
-		this.authorDAO = authorDAO;
+	public AuthorManager(AuthorDao authorDao, OptionSelector optionSelector) {
+		this.authorDao = authorDao;
 		this.optionSelector = optionSelector;
 	}
 
@@ -39,7 +39,7 @@ public class AuthorManager {
 
 			switch (option) {
 				case "back": {
-					addAuthor();
+					LibraryMenu.loadApp();
 					continueSection = false;
 					break;
 				}
@@ -57,8 +57,8 @@ public class AuthorManager {
 					break;
 				}
 				case "add": {
-							addAuthor();
-							authorDAO.addAuthor();
+					addingAuthor();
+					break;
 				}
 				default:
 					logger.error("L'action que vous avez effectuer n'est pas correcte, veuillez entrer la valeur requise");
@@ -68,7 +68,7 @@ public class AuthorManager {
 	}
 
 	public void displayAuthors() {
-		List<Author> authors = authorDAO.getAuthors();
+		List<Author> authors = authorDao.getAuthors();
 
 		System.out.println("Liste des auteurs");
 		for (Author author : authors) {
@@ -77,7 +77,7 @@ public class AuthorManager {
 	}
 
 	public boolean delete(int id) {
-		boolean result = authorDAO.deleteAuthor(id);
+		boolean result = authorDao.deleteAuthor(id);
 
 		if (result) {
 			System.out.println("L'auteur et ses livres ont ete supprimes avec succes.");
@@ -94,11 +94,26 @@ public class AuthorManager {
 		displayAuthors();
 	}
 
-	public void addAuthor() {
+	public Author addingAuthor() {
 		System.out.println("Ajout d'un nouvel auteur");
 		System.out.print("Entrez le prénom de l'auteur : ");
-		String prenom = optionSelector.readString();
-		System.out.println("Entrez le nom de l'auteur : ");
-		String nom = optionSelector.readString();
+		String firstName = optionSelector.readString();
+		System.out.print("Entrez le nom de l'auteur : ");
+		String lastName = optionSelector.readString();
+
+		Author author = new Author(firstName, lastName);
+
+		if (firstName.isEmpty() || lastName.isEmpty()) {
+			logger.error("\ntous les champs doivent etre remplir\n");
+			addingAuthor();
+		}else if (authorDao.check(author)){
+			logger.error("\nL'auteur " + firstName + " " + lastName +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
+			addingAuthor();
+		} else {
+			authorDao.save(author);
+			System.out.println("\nL'auteur " + firstName + " " + lastName +" a été rajouté avec succès.\n");
+			returnToList();
+		}
+		return author;
 	}
 }
