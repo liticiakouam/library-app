@@ -45,14 +45,9 @@ public class AuthorManager {
 				}
 				case "delete": {
 					try {
-						int id = Integer.parseInt(substring[1]);
-						boolean deleted = delete(id);
-						if (deleted) {
-							returnToList();
-						}
-					} catch (NumberFormatException e) {
-						logger.error(substring[1]
-								+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+						processDelete(substring[1]);
+					} catch (Exception e) {
+						logger.error("Veuillez saisir un identifiant apres \"delete.\"");
 					}
 					break;
 				}
@@ -73,6 +68,20 @@ public class AuthorManager {
 		System.out.println("Liste des auteurs");
 		for (Author author : authors) {
 			System.out.println(author.getId() + " - " + author.getFullName());
+		}
+	}
+
+	public void processDelete(String idInString){
+
+		try {
+			int id = Integer.parseInt(idInString);
+			boolean deleted = delete(id);
+			if (deleted) {
+				returnToList();
+			}
+		} catch (NumberFormatException e) {
+			logger.error(idInString
+					+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
 		}
 	}
 
@@ -103,16 +112,27 @@ public class AuthorManager {
 
 		Author author = new Author(firstName, lastName);
 
-		if (firstName.isEmpty() || lastName.isEmpty()) {
-			logger.error("\ntous les champs doivent etre remplir\n");
+		if (lastName.isEmpty() && firstName.isEmpty()) {
+			logger.error("Veillez entrer un prenom et un nom\n");
 			processSave();
-		}else if (authorDao.checkExistingAuthor(author)) {
+		} if (firstName.isEmpty()) {
+			logger.error("Veillez entrer le prenom\n");
+			processSave();
+		} if (lastName.isEmpty()) {
+			logger.error("Veillez entrer un nom\n");
+			processSave();
+		} else if (authorDao.checkExistingAuthor(author)) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
 			processSave();
 		} else {
-			authorDao.save(author);
-			System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
-			returnToList();
+			Author addedAuthor = authorDao.save(author);
+			if (addedAuthor != null){
+				System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
+				returnToList();
+			} else {
+				logger.error("Une erreur est survenue lors de l'insertion");
+				processSave();
+			}
 		}
 	}
 }
