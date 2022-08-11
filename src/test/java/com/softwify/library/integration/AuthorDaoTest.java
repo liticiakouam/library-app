@@ -1,8 +1,6 @@
 package com.softwify.library.integration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -54,4 +52,26 @@ public class AuthorDaoTest {
 		 * (author.getId() == 4) { authorFound = true; } } assertFalse(authorFound);
 		 */
 	}
+
+	@Test
+	public void insertAuthor() {
+		Author authorAdd = new Author("liti", "kouam");
+		authorDao.save(authorAdd);
+		assertEquals(5, authorDao.getAuthors().size());
+	}
+
+	@Test
+	public void checkAuthorAlreadyExist() {
+		Author author = new Author("Thione", "Niang");
+		boolean check = authorDao.checkExistingAuthor(author);
+		assertTrue(check);
+	}
+
+	@Test
+	public void checkAuthorIsNotAlreadyExist() {
+		Author author = new Author("anze", "Niang");
+		boolean check = authorDao.checkExistingAuthor(author);
+		assertFalse(check);
+	}
+
 }

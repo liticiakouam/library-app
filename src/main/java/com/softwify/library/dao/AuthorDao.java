@@ -88,9 +88,9 @@ public class AuthorDao {
 		return createdAuthor;
 	}
 
-	public boolean check(Author author) {
+	public boolean checkExistingAuthor(Author author) {
 		Connection connection = null;
-		boolean checkAuthor = false;
+		boolean isAuthorExist = false;
 		try {
 			connection = dataBaseConfig.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.CHECK_IF_AUTHOR_EXIST);
@@ -99,7 +99,7 @@ public class AuthorDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				int count = resultSet.getInt(1);
-				checkAuthor = count > 0;
+				isAuthorExist = count > 0;
 			}
 			dataBaseConfig.closeResultSet(resultSet);
 			dataBaseConfig.closePreparedStatement(preparedStatement);
@@ -109,7 +109,7 @@ public class AuthorDao {
 			dataBaseConfig.closeConnection(connection);
 		}
 
-		return checkAuthor;
+		return isAuthorExist;
 	}
 
 }

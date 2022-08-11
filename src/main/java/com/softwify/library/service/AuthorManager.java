@@ -57,7 +57,7 @@ public class AuthorManager {
 					break;
 				}
 				case "add": {
-					addingAuthor();
+					processSave();
 					break;
 				}
 				default:
@@ -94,7 +94,7 @@ public class AuthorManager {
 		displayAuthors();
 	}
 
-	public Author addingAuthor() {
+	public void processSave() {
 		System.out.println("Ajout d'un nouvel auteur");
 		System.out.print("Entrez le prénom de l'auteur : ");
 		String firstName = optionSelector.readString();
@@ -105,15 +105,14 @@ public class AuthorManager {
 
 		if (firstName.isEmpty() || lastName.isEmpty()) {
 			logger.error("\ntous les champs doivent etre remplir\n");
-			addingAuthor();
-		}else if (authorDao.check(author)){
-			logger.error("\nL'auteur " + firstName + " " + lastName +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
-			addingAuthor();
+			processSave();
+		}else if (authorDao.checkExistingAuthor(author)) {
+			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
+			processSave();
 		} else {
 			authorDao.save(author);
-			System.out.println("\nL'auteur " + firstName + " " + lastName +" a été rajouté avec succès.\n");
+			System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
 			returnToList();
 		}
-		return author;
 	}
 }
