@@ -102,9 +102,9 @@ public class AuthorManager {
 		String lastName = optionSelector.readString();
 
 		Author author = new Author(firstName, lastName);
+		logger.error("\ntous les champs doivent etre remplir\n");
 
 		if (firstName.isEmpty() || lastName.isEmpty()) {
-			logger.error("\ntous les champs doivent etre remplir\n");
 			processSave();
 		}else if (authorDao.checkExistingAuthor(author)) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
