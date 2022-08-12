@@ -46,7 +46,7 @@ public class AuthorManager {
 				case "delete": {
 					try {
 						processDelete(substring[1]);
-					} catch (Exception e) {
+					} catch (ArrayIndexOutOfBoundsException e) {
 						logger.error("Veuillez saisir un identifiant apres \"delete.\"");
 					}
 					break;
@@ -105,23 +105,25 @@ public class AuthorManager {
 
 	public void processSave() {
 		System.out.println("Ajout d'un nouvel auteur");
+
 		System.out.print("Entrez le prénom de l'auteur : ");
 		String firstName = optionSelector.readString();
+		while (firstName.isEmpty()) {
+			logger.error("Prenom incorrect, veuillez reeassayer\n");
+			System.out.print("Entrez le prénom de l'auteur : ");
+			firstName = optionSelector.readString();
+		}
+
 		System.out.print("Entrez le nom de l'auteur : ");
 		String lastName = optionSelector.readString();
+		while (lastName.isEmpty()) {
+			logger.error("Nom incorrect, veuillez reeassayer\n");
+			System.out.print("Entrez le nom de l'auteur : ");
+			lastName = optionSelector.readString();
+		}
 
 		Author author = new Author(firstName, lastName);
-
-		if (lastName.isEmpty() && firstName.isEmpty()) {
-			logger.error("Veillez entrer un prenom et un nom\n");
-			processSave();
-		} if (firstName.isEmpty()) {
-			logger.error("Veillez entrer le prenom\n");
-			processSave();
-		} if (lastName.isEmpty()) {
-			logger.error("Veillez entrer un nom\n");
-			processSave();
-		} else if (authorDao.checkExistingAuthor(author)) {
+		if (authorDao.checkExistingAuthor(author)) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
 			processSave();
 		} else {
