@@ -31,7 +31,7 @@ public class TextbookDao {
             PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEXTBOOKS);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("textbook_id");
                 String title = resultSet.getString("title");
                 String firstname = resultSet.getString("firstname");
                 String lastname = resultSet.getString("lastname");
@@ -47,5 +47,24 @@ public class TextbookDao {
         }
 
         return textbooks;
+    }
+
+    public boolean deleteTextbook (int id) {
+        Connection connection = null;
+        boolean deleted = false;
+        try {
+            connection = dataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.DELETE_TEXTBOOK);
+            preparedStatement.setInt(1, id);
+            int affectedRows = preparedStatement.executeUpdate();
+            deleted = affectedRows == 1;
+            dataBaseConfig.closePreparedStatement(preparedStatement);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("An error has occurred", e);
+        } finally {
+            dataBaseConfig.closeConnection(connection);
+        }
+
+        return deleted;
     }
 }

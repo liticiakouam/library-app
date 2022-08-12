@@ -3,7 +3,7 @@ package com.softwify.library.model;
 import java.util.Date;
 
 public class Textbook {
-    private int id;
+    private int textbook_id;
     private String title;
     private int author_id;
     private int isbn;
@@ -13,18 +13,22 @@ public class Textbook {
     private String lastName;
 
     public Textbook(int id, String title, String firstName, String lastName) {
-        this.id = id;
+        this.textbook_id = id;
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getId() {
-        return id;
+    public Textbook(int id) {
+        this.textbook_id = id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getTextbook_id() {
+        return textbook_id;
+    }
+
+    public void setTextbook_id(int textbook_id) {
+        this.textbook_id = textbook_id;
     }
 
     public String getTitle() {

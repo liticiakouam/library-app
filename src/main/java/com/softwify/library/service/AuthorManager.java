@@ -45,14 +45,9 @@ public class AuthorManager {
 				}
 				case "delete": {
 					try {
-						int id = Integer.parseInt(substring[1]);
-						boolean deleted = delete(id);
-						if (deleted) {
-							returnToList();
-						}
-					} catch (NumberFormatException e) {
-						logger.error(substring[1]
-								+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+						processDelete(substring[1]);
+					} catch (ArrayIndexOutOfBoundsException e) {
+						logger.error("Veuillez entrer un  identifiant s'il vous plait");
 					}
 					break;
 				}
@@ -73,6 +68,19 @@ public class AuthorManager {
 		System.out.println("Liste des auteurs");
 		for (Author author : authors) {
 			System.out.println(author.getId() + " - " + author.getFullName());
+		}
+	}
+
+	public void processDelete(String inIdString){
+		try {
+			int id = Integer.parseInt(inIdString);
+			boolean deleted = delete(id);
+			if (deleted) {
+				returnToList();
+			}
+		} catch (NumberFormatException e) {
+			logger.error(inIdString
+					+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
 		}
 	}
 

@@ -31,20 +31,20 @@ INSERT INTO `author` (`id`, `lastname`, `firstname`) VALUES
 
 DROP TABLE IF EXISTS `textbook`;
 CREATE TABLE IF NOT EXISTS `textbook` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `textbook_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(225) NOT NULL,
   `author_id` int(11) NOT NULL,
   `isbn` int(11) NOT NULL,
   `editor` varchar(225) NOT NULL,
   `publication_date` date NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`textbook_id`),
   KEY `author_id` (`author_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Constraints for dumped tables
 --
-INSERT INTO `textbook` (`id`, `title`, `author_id`, `isbn`, `editor`, `publication_date`) VALUES
+INSERT INTO `textbook` (`textbook_id`, `title`, `author_id`, `isbn`, `editor`, `publication_date`) VALUES
 (3, 'En as-tu vraiment besoin ?', 3, 1234567890, 'paris', '2022-08-21'),
 (5, 'Demain tu gouvernes le monde', 5, 1234567890, 'paris', '2022-08-02'),
 (8, 'Social Entrepreneurship', 5, 1234567890, 'USA', '2022-08-18'),
