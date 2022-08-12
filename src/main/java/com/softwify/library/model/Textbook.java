@@ -12,15 +12,20 @@ public class Textbook {
     private String firstName;
     private String lastName;
 
+    public Textbook(String title, String firstName, String lastName, int isbn, String editor, Date publication_date) {
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isbn = isbn;
+        this.editor = editor;
+        this.publication_date = publication_date;
+    }
+
     public Textbook(int id, String title, String firstName, String lastName) {
         this.textbook_id = id;
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public Textbook(int id) {
-        this.textbook_id = id;
     }
 
     public int getTextbook_id() {

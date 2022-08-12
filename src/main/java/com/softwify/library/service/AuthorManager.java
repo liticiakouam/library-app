@@ -106,21 +106,34 @@ public class AuthorManager {
 		System.out.println("Ajout d'un nouvel auteur");
 		System.out.print("Entrez le prénom de l'auteur : ");
 		String firstName = optionSelector.readString();
+
+		while (firstName.isEmpty()) {
+			logger.error("Prenom incorrect, veuillez reessayer");
+			System.out.print("Entrez le prénom de l'auteur : ");
+			firstName = optionSelector.readString();
+		}
 		System.out.print("Entrez le nom de l'auteur : ");
 		String lastName = optionSelector.readString();
+		while (lastName.isEmpty()) {
+			logger.error("Nom incorrect, veuillez reessayer");
+			System.out.print("Entrez le nom de l'auteur : ");
+			lastName = optionSelector.readString();
+		}
 
 		Author author = new Author(firstName, lastName);
 		logger.error("\ntous les champs doivent etre remplir\n");
-
-		if (firstName.isEmpty() || lastName.isEmpty()) {
-			processSave();
-		}else if (authorDao.checkExistingAuthor(author)) {
+		if (authorDao.checkExistingAuthor(author)) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
 			processSave();
 		} else {
-			authorDao.save(author);
-			System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
-			returnToList();
+			Author addedAuthor = authorDao.save(author);
+			if (addedAuthor != null){
+				System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
+				returnToList();
+			} else {
+				logger.error("Une erreur est survenue lors de l'insertion");
+				processSave();
+			}
 		}
 	}
 }

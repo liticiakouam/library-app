@@ -45,11 +45,16 @@ public class TextbookManager {
                         try {
                             processDelete(substring[1]);
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            logger.error("erreur");
+                            logger.error("Veuillez entrer un  identifiant s'il vous plait");
                         }
                         break;
                     }
-                    case "add": {
+                    case "read": {
+                        try {
+                            processReading(substring[1]);
+                        } catch (ArrayIndexOutOfBoundsException e){
+                            logger.error("Veuillez entrer un  identifiant s'il vous plait");
+                        }
                         break;
                     }
                     default:
@@ -78,6 +83,34 @@ public class TextbookManager {
         }
 
         return result;
+    }
+
+    public boolean readTextbook(int id) {
+        List<Textbook> textbooks = textbookDao.readTextbook(id);
+
+        for (Textbook textbook : textbooks) {
+            System.out.println("Titre : " + textbook.getTitle());
+            System.out.println("Auteur : " + textbook.getFullName());
+            System.out.println("ISBN : " + textbook.getIsbn());
+            System.out.println("Editeur : " + textbook.getEditor());
+            System.out.println("Année de publication : " + textbook.getPublication_date());
+            break;
+        }
+        return true;
+    }
+
+    public void processReading(String inIdString){
+
+        try {
+            int id = Integer.parseInt(inIdString);
+            readTextbook(id);
+            if (readTextbook(id)) {
+                returnToList();
+            }
+        } catch (NumberFormatException e) {
+            logger.error(inIdString
+                    + "n'est pas un nombre, entrer un nombre représentant l'identifiant du livre !!!");
+        }
     }
 
     public void processDelete(String inIdString){

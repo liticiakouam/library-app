@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TextbookDao {
@@ -66,5 +67,34 @@ public class TextbookDao {
         }
 
         return deleted;
+    }
+
+    public List<Textbook> readTextbook (int id) {
+        Connection connection = null;
+        List<Textbook> textbooks = new ArrayList<>();
+        try {
+            connection = dataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.READ_TEXTBOOK);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String firstname = resultSet.getString("firstname");
+                String lastname = resultSet.getString("lastname");
+                int isbn = resultSet.getInt("isbn");
+                String editor = resultSet.getString("editor");
+                Date publicationDate = resultSet.getDate("publication_date");
+                Textbook textbook = new Textbook(title, firstname, lastname, isbn, editor, publicationDate);
+                textbooks.add(textbook);
+            }
+            dataBaseConfig.closeResultSet(resultSet);
+            dataBaseConfig.closePreparedStatement(preparedStatement);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("An error has occurred", e);
+        } finally {
+            dataBaseConfig.closeConnection(connection);
+        }
+
+        return textbooks;
     }
 }
