@@ -15,7 +15,7 @@ public class DataBasePrepareServiceTextbook {
             connection.prepareStatement("delete from textbook").execute();
             connection.prepareStatement("alter table textbook AUTO_INCREMENT = 1").execute();
 
-            final String INSERT_TEXTBOOKS= "INSERT INTO `textbook` (`textbook_id`, `title`, `author_id`, `isbn`, `editor`, `publication_date`) VALUES\n" +
+            final String INSERT_TEXTBOOKS= "INSERT INTO `textbook` (`id`, `title`, `author_id`, `isbn`, `editor`, `publication_date`) VALUES\n" +
                     "(3, 'En as-tu vraiment besoin ?', 3, 1234567890, 'paris', '2022-08-21'),\n" +
                     "(5, 'Demain tu gouvernes le monde', 5, 1234567890, 'paris', '2022-08-02'),\n" +
                     "(8, 'Social Entrepreneurship', 5, 1234567890, 'USA', '2022-08-18'),\n" +

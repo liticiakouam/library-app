@@ -1,16 +1,15 @@
 package com.softwify.library.integration;
 
 import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.dao.AuthorDao;
 import com.softwify.library.dao.TextbookDao;
 import com.softwify.library.integration.config.DataBaseConfigTest;
-import com.softwify.library.integration.service.DataBasePrepareService;
 import com.softwify.library.integration.service.DataBasePrepareServiceTextbook;
-import com.softwify.library.model.Author;
 import com.softwify.library.model.Textbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,8 +25,8 @@ public class TextbookDaoTest {
     }
 
     @Test
-    public void getTextbookReturnsExpectedSizeAndTextbookOrderByTitle() {
-        List<Textbook> textbooks = textbookDao.getTextbooks();
+    public void getTextbookReturnsExpectedSIzeAndTextbookOrderByTitle() {
+        List<Textbook> textbooks = textbookDao.getAll();
         assertEquals("Demain tu gouvernes le monde", textbooks.get(0).getTitle());
         assertEquals("En as-tu vraiment besoin ?", textbooks.get(1).getTitle());
         assertEquals("L'effet papillon", textbooks.get(2).getTitle());
@@ -39,15 +38,39 @@ public class TextbookDaoTest {
 
     @Test
     public void givenIdDeleteTextbookRemovesCorrespondingTextbook() {
-        assertEquals(6, textbookDao.getTextbooks().size());
+        assertEquals(6, textbookDao.getAll().size());
         boolean deleted = textbookDao.deleteTextbook(3);
         assertTrue(deleted);
 
-        List<Textbook> textbooks = textbookDao.getTextbooks();
+        List<Textbook> textbooks = textbookDao.getAll();
         assertEquals(5, textbooks.size());
 
         for (Textbook textbook : textbooks) {
-            assertNotEquals(3, textbook.getTextbook_id());
+            assertNotEquals(3, textbook.getId());
         }
+    }
+
+    @Test
+    public void testShouldReturnNullWhenIdNotExists() {
+        Textbook textbook = textbookDao.get(30);
+        assertNull(textbook);
+    }
+
+    @Test
+    public void testShouldNotReturnNullWhenIdExists() {
+        Textbook textbook = textbookDao.get(5);
+        assertNotNull(textbook);
+
+        assertEquals("Demain tu gouvernes le monde", textbook.getTitle());
+        assertEquals("Thione Niang", textbook.getFullName());
+        assertEquals(1234567890, textbook.getIsbn());
+        assertEquals("paris", textbook.getEditor());
+
+        Date publicationDate = textbook.getPublicationDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(publicationDate);
+        assertEquals(2022, calendar.get(Calendar.YEAR));
+        assertEquals(7, calendar.get(Calendar.MONTH));
+        assertEquals(2, calendar.get(Calendar.DAY_OF_MONTH));
     }
 }

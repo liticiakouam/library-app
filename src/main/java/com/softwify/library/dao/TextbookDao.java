@@ -2,16 +2,13 @@ package com.softwify.library.dao;
 
 import com.softwify.library.configuration.DataBaseConfig;
 import com.softwify.library.constants.DBConstants;
+import com.softwify.library.model.Author;
 import com.softwify.library.model.Textbook;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TextbookDao {
@@ -23,7 +20,7 @@ public class TextbookDao {
         this.dataBaseConfig = dataBaseConfig;
     }
 
-    public List<Textbook> getTextbooks() {
+    public List<Textbook> getAll() {
         Connection connection = null;
         List<Textbook> textbooks = new ArrayList<>();
 
@@ -32,7 +29,7 @@ public class TextbookDao {
             PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEXTBOOKS);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("textbook_id");
+                int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String firstname = resultSet.getString("firstname");
                 String lastname = resultSet.getString("lastname");
@@ -69,23 +66,22 @@ public class TextbookDao {
         return deleted;
     }
 
-    public List<Textbook> readTextbook (int id) {
+    public Textbook get(int id) {
         Connection connection = null;
-        List<Textbook> textbooks = new ArrayList<>();
+        Textbook textbook = null;
         try {
             connection = dataBaseConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.READ_TEXTBOOK);
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_TEXTBOOK);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            if(resultSet.next()) {
                 String title = resultSet.getString("title");
                 String firstname = resultSet.getString("firstname");
                 String lastname = resultSet.getString("lastname");
                 int isbn = resultSet.getInt("isbn");
                 String editor = resultSet.getString("editor");
                 Date publicationDate = resultSet.getDate("publication_date");
-                Textbook textbook = new Textbook(title, firstname, lastname, isbn, editor, publicationDate);
-                textbooks.add(textbook);
+                textbook = new Textbook(title, firstname, lastname, isbn, editor, publicationDate);
             }
             dataBaseConfig.closeResultSet(resultSet);
             dataBaseConfig.closePreparedStatement(preparedStatement);
@@ -95,6 +91,82 @@ public class TextbookDao {
             dataBaseConfig.closeConnection(connection);
         }
 
-        return textbooks;
+        return textbook;
+    }
+
+    public Textbook save(Textbook textbook) {
+        Connection connection = null;
+        Textbook createdTextbook = null;
+        try {
+            connection = dataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.ADD_TEXTBOOK, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, textbook.getTitle());
+            preparedStatement.setInt(2, textbook.getIsbn());
+            preparedStatement.setString(3, textbook.getEditor());
+            preparedStatement.setDate(4, (Date) textbook.getPublicationDate());
+            preparedStatement.setInt(5, textbook.getAuthorId());
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()) {
+                int id = resultSet.getInt(1);
+                createdTextbook = new Textbook(id, textbook.getTitle(), textbook.getIsbn(), textbook.getEditor(), textbook.getPublicationDate(), textbook.getAuthorId());
+            }
+            dataBaseConfig.closePreparedStatement(preparedStatement);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("An error has occurred", e);
+        } finally {
+            dataBaseConfig.closeConnection(connection);
+        }
+        return createdTextbook;
+    }
+
+
+    public boolean checkExistingAuthor(Author author) {
+        Connection connection = null;
+        boolean isAuthorExist = false;
+        try {
+            connection = dataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.CHECK_IF_AUTHOR_EXIST);
+            preparedStatement.setString(1, author.getFirstName());
+            preparedStatement.setString(2, author.getLastName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                isAuthorExist = count > 0;
+            }
+            dataBaseConfig.closeResultSet(resultSet);
+            dataBaseConfig.closePreparedStatement(preparedStatement);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("An error has occurred", e);
+        } finally {
+            dataBaseConfig.closeConnection(connection);
+        }
+
+        return isAuthorExist;
+    }
+
+    public Textbook getValidTextbook(String firstName, String lastName) {
+        Connection connection = null;
+
+        Textbook textbook = null;
+        try {
+            connection = dataBaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_AUTHOR);
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                textbook = new Textbook(id);
+            }
+            dataBaseConfig.closeResultSet(resultSet);
+            dataBaseConfig.closePreparedStatement(preparedStatement);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("An error has occurred", e);
+        } finally {
+            dataBaseConfig.closeConnection(connection);
+        }
+
+        return textbook;
     }
 }

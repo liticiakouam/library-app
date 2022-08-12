@@ -3,37 +3,69 @@ package com.softwify.library.model;
 import java.util.Date;
 
 public class Textbook {
-    private int textbook_id;
+    private int id;
     private String title;
-    private int author_id;
+    private int authorId;
     private int isbn;
     private String editor;
-    private Date publication_date;
-    private String firstName;
-    private String lastName;
+    private Date publicationDate;
+    private String authorFirstName;
+    private String authorFastName;
 
-    public Textbook(String title, String firstName, String lastName, int isbn, String editor, Date publication_date) {
+    public Textbook(String title, int isbn, String editor, Date publicationDate, int authorId) {
+        this.id = authorId;
         this.title = title;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.isbn = isbn;
         this.editor = editor;
-        this.publication_date = publication_date;
+        this.publicationDate = publicationDate;
+    }
+
+    public Textbook(int id, String title, int isbn, String editor, Date publicationDate, int authorId) {
+        this.id = id;
+        this.title = title;
+        this.isbn = isbn;
+        this.editor = editor;
+        this.publicationDate = publicationDate;
+        this.authorId = authorId;
+    }
+
+    public Textbook(int id, String title, String firstName, String lastName, int authorId, int isbn, String editor, Date publicationDate) {
+        this.title = title;
+        this.id = id;
+        this.authorFirstName = firstName;
+        this.authorFastName = lastName;
+        this.authorId = authorId;
+        this.isbn = isbn;
+        this.editor = editor;
+        this.publicationDate = publicationDate;
     }
 
     public Textbook(int id, String title, String firstName, String lastName) {
-        this.textbook_id = id;
+        this.id = id;
         this.title = title;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.authorFirstName = firstName;
+        this.authorFastName = lastName;
     }
 
-    public int getTextbook_id() {
-        return textbook_id;
+    public Textbook(String title, String authorFirstname, String authorLastname, int isbn, String editor, java.sql.Date publicationDate) {
+        this.title = title;
+        this.authorFirstName = authorFirstname;
+        this.authorFastName = authorLastname;
+        this.isbn = isbn;
+        this.editor = editor;
+        this.publicationDate = publicationDate;
     }
 
-    public void setTextbook_id(int textbook_id) {
-        this.textbook_id = textbook_id;
+    public Textbook(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -44,12 +76,12 @@ public class Textbook {
         this.title = title;
     }
 
-    public int getAuthor_id() {
-        return author_id;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public int getIsbn() {
@@ -68,31 +100,31 @@ public class Textbook {
         this.editor = editor;
     }
 
-    public Date getPublication_date() {
-        return publication_date;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setPublication_date(Date publication_date) {
-        this.publication_date = publication_date;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getAuthorFirstName() {
+        return authorFirstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setAuthorFirstName(String authorFirstName) {
+        this.authorFirstName = authorFirstName;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getAuthorLastName() {
+        return authorFastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setAuthorFastName(String authorFastName) {
+        this.authorFastName = authorFastName;
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
+        return authorFirstName + " " + authorFastName;
     }
 }

@@ -121,7 +121,6 @@ public class AuthorManager {
 		}
 
 		Author author = new Author(firstName, lastName);
-		logger.error("\ntous les champs doivent etre remplir\n");
 		if (authorDao.checkExistingAuthor(author)) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
 			processSave();
@@ -129,11 +128,10 @@ public class AuthorManager {
 			Author addedAuthor = authorDao.save(author);
 			if (addedAuthor != null){
 				System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
-				returnToList();
 			} else {
 				logger.error("Une erreur est survenue lors de l'insertion");
-				processSave();
 			}
+			returnToList();
 		}
 	}
 }
