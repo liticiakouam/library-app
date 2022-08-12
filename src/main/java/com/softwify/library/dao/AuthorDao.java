@@ -1,9 +1,6 @@
 package com.softwify.library.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,4 +64,52 @@ public class AuthorDao {
 
 		return deleted;
 	}
+
+	public Author save(Author author) {
+		Connection connection = null;
+		Author createdAuthor = null;
+		try {
+			connection = dataBaseConfig.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.ADD_AUTHOR, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, author.getFirstName());
+			preparedStatement.setString(2, author.getLastName());
+			preparedStatement.executeUpdate();
+			ResultSet resultSet = preparedStatement.getGeneratedKeys();
+			if(resultSet.next()) {
+				int id = resultSet.getInt(1);
+				createdAuthor = new Author(id, author.getFirstName(), author.getLastName());
+			}
+			dataBaseConfig.closePreparedStatement(preparedStatement);
+		} catch (SQLException | ClassNotFoundException e) {
+			logger.error("An error has occurred", e);
+		} finally {
+			dataBaseConfig.closeConnection(connection);
+		}
+		return createdAuthor;
+	}
+
+	public boolean checkExistingAuthor(Author author) {
+		Connection connection = null;
+		boolean isAuthorExist = false;
+		try {
+			connection = dataBaseConfig.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.CHECK_IF_AUTHOR_EXIST);
+			preparedStatement.setString(1, author.getFirstName());
+			preparedStatement.setString(2, author.getLastName());
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int count = resultSet.getInt(1);
+				isAuthorExist = count > 0;
+			}
+			dataBaseConfig.closeResultSet(resultSet);
+			dataBaseConfig.closePreparedStatement(preparedStatement);
+		} catch (SQLException | ClassNotFoundException e) {
+			logger.error("An error has occurred", e);
+		} finally {
+			dataBaseConfig.closeConnection(connection);
+		}
+
+		return isAuthorExist;
+	}
+
 }

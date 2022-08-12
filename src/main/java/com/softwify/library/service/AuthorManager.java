@@ -12,11 +12,11 @@ import com.softwify.library.util.OptionSelector;
 public class AuthorManager {
 
 	private static final Logger logger = LogManager.getLogger(AuthorManager.class.getSimpleName());
-	private final AuthorDao authorDAO;
+	private final AuthorDao authorDao;
 	private final OptionSelector optionSelector;
 
-	public AuthorManager(AuthorDao authorDAO, OptionSelector optionSelector) {
-		this.authorDAO = authorDAO;
+	public AuthorManager(AuthorDao authorDao, OptionSelector optionSelector) {
+		this.authorDao = authorDao;
 		this.optionSelector = optionSelector;
 	}
 
@@ -38,33 +38,32 @@ public class AuthorManager {
 			String option = substring[0];
 
 			switch (option) {
-			case "back": {
-				LibraryMenu.loadApp();
-				continueSection = false;
-				break;
-			}
-			case "delete": {
-				try {
-					int id = Integer.parseInt(substring[1]);
-					boolean deleted = delete(id);
-					if (deleted) {
-						returnToList();
-					}
-				} catch (NumberFormatException e) {
-					logger.error(substring[1]
-							+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+				case "back": {
+					LibraryMenu.loadApp();
+					continueSection = false;
+					break;
 				}
-				break;
-			}
-			default:
-				logger.error("L'action que vous avez effectuer n'est pas correcte, veuillez entrer la valeur requise");
-				break;
+				case "delete": {
+					try {
+						processDelete(substring[1]);
+					} catch (ArrayIndexOutOfBoundsException e) {
+						logger.error("Veuillez saisir un identifiant apres \"delete.\"");
+					}
+					break;
+				}
+				case "add": {
+					processSave();
+					break;
+				}
+				default:
+					logger.error("L'action que vous avez effectuer n'est pas correcte, veuillez entrer la valeur requise");
+					break;
 			}
 		}
 	}
 
 	public void displayAuthors() {
-		List<Author> authors = authorDAO.getAuthors();
+		List<Author> authors = authorDao.getAuthors();
 
 		System.out.println("Liste des auteurs");
 		for (Author author : authors) {
@@ -72,8 +71,22 @@ public class AuthorManager {
 		}
 	}
 
+	public void processDelete(String idInString){
+
+		try {
+			int id = Integer.parseInt(idInString);
+			boolean deleted = delete(id);
+			if (deleted) {
+				returnToList();
+			}
+		} catch (NumberFormatException e) {
+			logger.error(idInString
+					+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+		}
+	}
+
 	public boolean delete(int id) {
-		boolean result = authorDAO.deleteAuthor(id);
+		boolean result = authorDao.deleteAuthor(id);
 
 		if (result) {
 			System.out.println("L'auteur et ses livres ont ete supprimes avec succes.");
@@ -88,5 +101,40 @@ public class AuthorManager {
 		System.out.println("Tapez \"ENTER\" pour retourner\r\n" + "-------------------------");
 		optionSelector.readString();
 		displayAuthors();
+	}
+
+	public void processSave() {
+		System.out.println("Ajout d'un nouvel auteur");
+
+		System.out.print("Entrez le prénom de l'auteur : ");
+		String firstName = optionSelector.readString();
+		while (firstName.isEmpty()) {
+			logger.error("Prenom incorrect, veuillez reeassayer\n");
+			System.out.print("Entrez le prénom de l'auteur : ");
+			firstName = optionSelector.readString();
+		}
+
+		System.out.print("Entrez le nom de l'auteur : ");
+		String lastName = optionSelector.readString();
+		while (lastName.isEmpty()) {
+			logger.error("Nom incorrect, veuillez reeassayer\n");
+			System.out.print("Entrez le nom de l'auteur : ");
+			lastName = optionSelector.readString();
+		}
+
+		Author author = new Author(firstName, lastName);
+		if (authorDao.checkExistingAuthor(author)) {
+			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
+			processSave();
+		} else {
+			Author addedAuthor = authorDao.save(author);
+			if (addedAuthor != null){
+				System.out.println("\nL'auteur " + author.getFullName() +" a été rajouté avec succès.\n");
+				returnToList();
+			} else {
+				logger.error("Une erreur est survenue lors de l'insertion");
+				processSave();
+			}
+		}
 	}
 }

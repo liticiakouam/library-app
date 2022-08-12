@@ -25,17 +25,20 @@ public class LibraryMenu {
 			loadMenu();
 			int option = optionSelector.readInt();
 			switch (option) {
-			case 1: {
-				authorManager.manage();
-				continueApp = false;
-				break;
-			}
-			case 0: {
-				System.exit(option);
-			}
-			default:
-				logger.error("S'il vous plait veillez entrer une valeur correcte");
-				break;
+				case 1: {
+					authorManager.manage();
+					continueApp = false;
+					break;
+				}
+				case 2: {
+					break;
+				}
+				case 0: {
+					System.exit(option);
+				}
+				default:
+					logger.error("S'il vous plait veillez entrer une valeur correcte");
+					break;
 			}
 		}
 	}

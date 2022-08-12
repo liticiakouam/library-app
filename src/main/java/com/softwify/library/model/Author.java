@@ -11,8 +11,9 @@ public class Author {
 		this.lastName = lastName;
 	}
 
-	public Author() {
-		// TODO Auto-generated constructor stub
+	public Author(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String getFirstName() {
