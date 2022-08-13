@@ -101,15 +101,18 @@ public class TextbookDao {
             connection = dataBaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.ADD_TEXTBOOK, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, textbook.getTitle());
-            preparedStatement.setInt(2, textbook.getIsbn());
-            preparedStatement.setString(3, textbook.getEditor());
-            preparedStatement.setDate(4, (Date) textbook.getPublicationDate());
-            preparedStatement.setInt(5, textbook.getAuthorId());
+            preparedStatement.setInt(2, textbook.getAuthorId());
+            preparedStatement.setInt(3, textbook.getIsbn());
+            preparedStatement.setString(4, textbook.getEditor());
+            java.util.Date publicationDate = textbook.getPublicationDate();
+        //    java.util.Date utilPackageDate = new java.util.Date();
+            java.sql.Date sqlPackageDate = new java.sql.Date(publicationDate.getTime());
+            preparedStatement.setDate(5, sqlPackageDate);
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if(resultSet.next()) {
                 int id = resultSet.getInt(1);
-                createdTextbook = new Textbook(id, textbook.getTitle(), textbook.getIsbn(), textbook.getEditor(), textbook.getPublicationDate(), textbook.getAuthorId());
+                createdTextbook = new Textbook(id, textbook.getAuthorId(), textbook.getTitle(), textbook.getIsbn(), textbook.getEditor(), textbook.getPublicationDate());
             }
             dataBaseConfig.closePreparedStatement(preparedStatement);
         } catch (SQLException | ClassNotFoundException e) {

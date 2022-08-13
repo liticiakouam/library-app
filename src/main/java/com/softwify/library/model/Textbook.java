@@ -12,15 +12,16 @@ public class Textbook {
     private String authorFirstName;
     private String authorFastName;
 
-    public Textbook(String title, int isbn, String editor, Date publicationDate, int authorId) {
-        this.id = authorId;
+    public Textbook(int id, String title, int authorId, int isbn, String editor, Date publicationDate) {
+        this.id = id;
+        this.authorId = authorId;
         this.title = title;
         this.isbn = isbn;
         this.editor = editor;
         this.publicationDate = publicationDate;
     }
 
-    public Textbook(int id, String title, int isbn, String editor, Date publicationDate, int authorId) {
+    public Textbook(int id, int authorId, String title, int isbn, String editor, Date publicationDate) {
         this.id = id;
         this.title = title;
         this.isbn = isbn;
