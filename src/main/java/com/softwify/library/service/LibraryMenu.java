@@ -1,5 +1,6 @@
 package com.softwify.library.service;
 
+import com.softwify.library.dao.TextbookDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +15,9 @@ public class LibraryMenu {
 	private static OptionSelector optionSelector = new OptionSelector();
 	private static DataBaseConfig dataBaseConfig = new DefaultDataBaseConfig();
 	private static AuthorDao authorDAO = new AuthorDao(dataBaseConfig);
+	private static TextbookDao textbookDao = new TextbookDao(dataBaseConfig);
 	private static AuthorManager authorManager = new AuthorManager(authorDAO, optionSelector);
+	private static TextbookManager textbookManager = new TextbookManager(textbookDao, optionSelector);
 
 	public static void loadApp() {
 		System.out.println("Bienvenue a la Bibliotheque");
@@ -31,7 +34,11 @@ public class LibraryMenu {
 					break;
 				}
 				case 2: {
+
+					textbookManager.manage();
+
 					break;
+
 				}
 				case 0: {
 					System.exit(option);
