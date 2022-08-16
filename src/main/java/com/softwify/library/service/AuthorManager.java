@@ -80,22 +80,13 @@ public class AuthorManager {
 		try {
 			int id = Integer.parseInt(inIdString);
 
-	public void processDelete(String idInString){
-
-		try {
-			int id = Integer.parseInt(idInString);
-
 			boolean deleted = delete(id);
 			if (deleted) {
 				returnToList();
 			}
 		} catch (NumberFormatException e) {
 
-			logger.error(inIdString
-
-			logger.error(idInString
-
-					+ "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
+			logger.error(inIdString + "n'est pas un nombre, entrer un nombre représentant l'identifiant de l'auteur !!!");
 		}
 	}
 
@@ -107,7 +98,6 @@ public class AuthorManager {
 		} else {
 			System.out.println("L'auteur que vous avez choisi, n'existe pas.");
 		}
-
 		return result;
 	}
 
@@ -128,26 +118,13 @@ public class AuthorManager {
 			System.out.print("Entrez le prénom de l'auteur : ");
 			firstName = optionSelector.readString();
 		}
+
 		System.out.print("Entrez le nom de l'auteur : ");
 		String lastName = optionSelector.readString();
+
 		while (lastName.isEmpty()) {
 			logger.error("Nom incorrect, veuillez reessayer");
-
-
-		System.out.print("Entrez le prénom de l'auteur : ");
-		String firstName = optionSelector.readString();
-		while (firstName.isEmpty()) {
-			logger.error("Prenom incorrect, veuillez reeassayer\n");
 			System.out.print("Entrez le prénom de l'auteur : ");
-			firstName = optionSelector.readString();
-		}
-
-		System.out.print("Entrez le nom de l'auteur : ");
-		String lastName = optionSelector.readString();
-		while (lastName.isEmpty()) {
-			logger.error("Nom incorrect, veuillez reeassayer\n");
-
-			System.out.print("Entrez le nom de l'auteur : ");
 			lastName = optionSelector.readString();
 		}
 
@@ -165,12 +142,9 @@ public class AuthorManager {
 			}
 			returnToList();
 
-				returnToList();
-			} else {
-				logger.error("Une erreur est survenue lors de l'insertion");
-				processSave();
 			}
 
-		}
+
+
 	}
 }

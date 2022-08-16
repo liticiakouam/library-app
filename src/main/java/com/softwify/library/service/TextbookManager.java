@@ -56,7 +56,7 @@ public class TextbookManager {
                     }
                     case "read": {
                         try {
-                            processReading(substring[1]);
+                            processRead(substring[1]);
                         } catch (ArrayIndexOutOfBoundsException e){
                             logger.error("Veuillez entrer un  identifiant s'il vous plait");
                         }
@@ -100,7 +100,7 @@ public class TextbookManager {
     }
 
     public boolean readTextbook(int id) {
-        Textbook textbook = textbookDao.get(id);
+        Textbook textbook = textbookDao.getTextbookInformation(id);
         if (textbook == null) {
             return false;
         }
@@ -112,7 +112,7 @@ public class TextbookManager {
         return true;
     }
 
-    public void processReading(String idInString){
+    public void processRead(String idInString){
 
         try {
             int id = Integer.parseInt(idInString);
@@ -148,17 +148,16 @@ public class TextbookManager {
     public void processAdd() throws ParseException {
         System.out.println("\nAjout d'un nouveau livre");
         System.out.print("Veuillez entrer le nom complet de l'auteur : ");
-        String authorFullName = null;
         String firstName = null;
         String lastName = null;
         try {
-            authorFullName = optionSelector.readString();
+            String authorFullName = optionSelector.readString();
             authorFullName = authorFullName.trim().replaceAll("\\s+", " ");
             String substring[] = authorFullName.split(" ");
             firstName = substring[0];
             lastName = substring[1];
 
-        } catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             logger.error("Nom et prenom requis");
         }
 
@@ -175,7 +174,7 @@ public class TextbookManager {
 
             System.out.print("Entrez le numéro ISBN : ");
             String isbn = optionSelector.readString();
-            int  isbnInt = Integer.parseInt(isbn);
+            int isbnInt = Integer.parseInt(isbn);
             while (titre.isEmpty()) {
                 logger.error("ISBN vide, veuillez reessayer");
                 System.out.print("Entrez le ISBN du livre : ");
@@ -197,22 +196,22 @@ public class TextbookManager {
             convertedDate = formatter.parse(date);
 
             while (date.isEmpty()) {
-                    logger.error("date vide, veuillez reessayer");
-                    System.out.print("Année de publication : : ");
-                    date = optionSelector.readString();
-                    formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-                    convertedDate = formatter.parse(date);
+                logger.error("date vide, veuillez reessayer");
+                System.out.print("Année de publication : : ");
+                date = optionSelector.readString();
+                formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+                convertedDate = formatter.parse(date);
             }
             Textbook validTextbook = textbookDao.getValidTextbook(firstName, lastName);
             int authorId = validTextbook.getId();
-            Textbook textbook =  new Textbook(1, titre, authorId, isbnInt, editeur, convertedDate);
+            Textbook textbook = new Textbook(1, titre, authorId, isbnInt, editeur, convertedDate);
             Textbook addedTextbook = textbookDao.save(textbook);
-            if (addedTextbook != null){
+            if (addedTextbook != null) {
                 System.out.println("\nLe livre " + textbook.getTitle() + " a été rajouté avec succès.\n");
                 displayTextbooks();
             }
         } else {
-            logger.error("L'auteur " +author.getFullName() + " n'existe pas");
+            logger.error("L'auteur " + author.getFullName() + " n'existe pas");
             processAdd();
         }
     }
