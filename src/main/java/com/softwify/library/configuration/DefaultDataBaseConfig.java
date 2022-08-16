@@ -18,8 +18,5 @@ public class DefaultDataBaseConfig extends DataBaseConfig {
 
 		return DriverManager.getConnection("jdbc:mysql://localhost:3306/library?serverTimezone=UTC", "root",
 				"rootroot");
-
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/library?serverTimezone=UTC", "root", "rootroot");
-
 	}
 }

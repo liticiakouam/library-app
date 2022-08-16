@@ -66,7 +66,7 @@ public class TextbookDao {
         return deleted;
     }
 
-    public Textbook get(int id) {
+    public Textbook getTextbookInformation(int id) {
         Connection connection = null;
         Textbook textbook = null;
         try {

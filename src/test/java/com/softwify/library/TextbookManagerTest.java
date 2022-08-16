@@ -46,15 +46,15 @@ public class TextbookManagerTest {
     @Test
     public void testShouldReturnTrueWhenTextbookIsDisplayed() {
         Textbook textbook = new Textbook(5, "super titre", "Liti", "kouam", 5, 1234, "paris", new Date());
-        when(textbookDao.get(5)).thenReturn(textbook);
+        when(textbookDao.getTextbookInformation(5)).thenReturn(textbook);
         assertTrue(textbookManager.readTextbook(5));
-        verify(textbookDao, times(1)).get(5);
+        verify(textbookDao, times(1)).getTextbookInformation(5);
     }
 
     @Test
     public void testShouldReturnFalseWhenTextbookIsNotDisplayed() {
-        when(textbookDao.get(5)).thenReturn(null);
+        when(textbookDao.getTextbookInformation(5)).thenReturn(null);
         assertFalse(textbookManager.readTextbook(5));
-        verify(textbookDao, times(1)).get(5);
+        verify(textbookDao, times(1)).getTextbookInformation(5);
     }
 }

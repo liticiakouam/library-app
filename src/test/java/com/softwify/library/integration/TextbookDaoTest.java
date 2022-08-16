@@ -52,13 +52,13 @@ public class TextbookDaoTest {
 
     @Test
     public void testShouldReturnNullWhenIdNotExists() {
-        Textbook textbook = textbookDao.get(30);
+        Textbook textbook = textbookDao.getTextbookInformation(30);
         assertNull(textbook);
     }
 
     @Test
     public void testShouldNotReturnNullWhenIdExists() {
-        Textbook textbook = textbookDao.get(5);
+        Textbook textbook = textbookDao.getTextbookInformation(5);
         assertNotNull(textbook);
 
         assertEquals("Demain tu gouvernes le monde", textbook.getTitle());
