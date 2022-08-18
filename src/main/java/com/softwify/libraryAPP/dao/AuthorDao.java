@@ -1,4 +1,4 @@
-package com.softwify.library.dao;
+package com.softwify.libraryAPP.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -7,14 +7,14 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.constants.DBConstants;
-import com.softwify.library.model.Author;
+import com.softwify.libraryAPP.configuration.DataBaseConfig;
+import com.softwify.libraryAPP.constants.Queries;
+import com.softwify.libraryAPP.model.Author;
 
 public class AuthorDao {
 	private static final Logger logger = LogManager.getLogger(AuthorDao.class.getSimpleName());
 
-	private DataBaseConfig dataBaseConfig;
+	private final DataBaseConfig dataBaseConfig;
 
 	public AuthorDao(DataBaseConfig dataBaseConfig) {
 		this.dataBaseConfig = dataBaseConfig;
@@ -26,7 +26,7 @@ public class AuthorDao {
 
 		try {
 			connection = dataBaseConfig.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.GET_AUTHORS);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.GET_AUTHORS);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
@@ -42,7 +42,6 @@ public class AuthorDao {
 		} finally {
 			dataBaseConfig.closeConnection(connection);
 		}
-
 		return authors;
 	}
 
@@ -51,7 +50,7 @@ public class AuthorDao {
 		boolean deleted = false;
 		try {
 			connection = dataBaseConfig.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.DELETE_AUTHOR);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.DELETE_AUTHOR);
 			preparedStatement.setInt(1, id);
 			int affectedRows = preparedStatement.executeUpdate();
 			deleted = affectedRows == 1;
@@ -70,7 +69,7 @@ public class AuthorDao {
 		Author createdAuthor = null;
 		try {
 			connection = dataBaseConfig.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.ADD_AUTHOR, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.ADD_AUTHOR, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, author.getFirstName());
 			preparedStatement.setString(2, author.getLastName());
 			preparedStatement.executeUpdate();
@@ -93,7 +92,7 @@ public class AuthorDao {
 		boolean isAuthorExist = false;
 		try {
 			connection = dataBaseConfig.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(DBConstants.CHECK_IF_AUTHOR_EXIST);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.CHECK_IF_AUTHOR_EXIST);
 			preparedStatement.setString(1, author.getFirstName());
 			preparedStatement.setString(2, author.getLastName());
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -110,6 +109,30 @@ public class AuthorDao {
 		}
 
 		return isAuthorExist;
+	}
+
+	public Author getByFirstNameAndLastName(String firstName, String lastName) {
+		Connection connection = null;
+		Author author = null;
+		try {
+			connection = dataBaseConfig.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.GET_AUTHOR);
+			preparedStatement.setString(1, firstName);
+			preparedStatement.setString(2, lastName);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				author = new Author(id, firstName, lastName);
+			}
+			dataBaseConfig.closeResultSet(resultSet);
+			dataBaseConfig.closePreparedStatement(preparedStatement);
+		} catch (SQLException | ClassNotFoundException e) {
+			logger.error("An error has occurred", e);
+		} finally {
+			dataBaseConfig.closeConnection(connection);
+		}
+
+		return author;
 	}
 
 }

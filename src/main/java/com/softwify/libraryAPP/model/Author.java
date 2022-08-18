@@ -1,9 +1,9 @@
-package com.softwify.library.model;
+package com.softwify.libraryAPP.model;
 
 public class Author {
 	private int id;
-	private String firstName;
-	private String lastName;
+	private final String firstName;
+	private final String lastName;
 
 	public Author(int id, String firstName, String lastName) {
 		this.id = id;
@@ -20,16 +20,8 @@ public class Author {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public String getLastName() {
 		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public int getId() {

@@ -1,4 +1,4 @@
-package com.softwify.library.integration;
+package com.softwify.libraryAPP.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,11 +7,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.integration.config.DataBaseConfigTest;
-import com.softwify.library.integration.service.DataBasePrepareService;
-import com.softwify.library.model.Author;
+import com.softwify.libraryAPP.configuration.DataBaseConfig;
+import com.softwify.libraryAPP.dao.AuthorDao;
+import com.softwify.libraryAPP.integration.config.DataBaseConfigTest;
+import com.softwify.libraryAPP.integration.service.DataBasePrepareService;
+import com.softwify.libraryAPP.model.Author;
 
 public class AuthorDaoTest {
 

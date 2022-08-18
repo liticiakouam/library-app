@@ -1,4 +1,4 @@
-package com.softwify.library.model;
+package com.softwify.libraryAPP.model;
 
 import java.util.Date;
 

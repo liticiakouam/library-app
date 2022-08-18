@@ -1,16 +1,16 @@
-package com.softwify.library.integration;
+package com.softwify.libraryAPP.integration;
 
-import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.dao.TextbookDao;
-import com.softwify.library.integration.config.DataBaseConfigTest;
-import com.softwify.library.integration.service.DataBasePrepareServiceTextbook;
-import com.softwify.library.model.Textbook;
+import com.softwify.libraryAPP.configuration.DataBaseConfig;
+import com.softwify.libraryAPP.dao.TextbookDao;
+import com.softwify.libraryAPP.integration.config.DataBaseConfigTest;
+import com.softwify.libraryAPP.integration.service.DataBasePrepareServiceTextbook;
+import com.softwify.libraryAPP.model.Textbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,20 +57,36 @@ public class TextbookDaoTest {
     }
 
     @Test
-    public void testShouldNotReturnNullWhenIdExists() {
-        Textbook textbook = textbookDao.getTextbookInformation(5);
+    public void testShouldNotReturnFalseWhenIdExists() {
+        Textbook textbook = textbookDao.getTextbookInformation(16);
         assertNotNull(textbook);
 
-        assertEquals("Demain tu gouvernes le monde", textbook.getTitle());
-        assertEquals("Thione Niang", textbook.getFullName());
+        assertEquals("Liberté 45", textbook.getTitle());
+        assertEquals("Pierre-Yves Mcsween", textbook.getFullName());
         assertEquals(1234567890, textbook.getIsbn());
-        assertEquals("paris", textbook.getEditor());
+        assertEquals("canada", textbook.getEditor());
 
         Date publicationDate = textbook.getPublicationDate();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(publicationDate);
         assertEquals(2022, calendar.get(Calendar.YEAR));
         assertEquals(7, calendar.get(Calendar.MONTH));
-        assertEquals(2, calendar.get(Calendar.DAY_OF_MONTH));
+        assertEquals(12, calendar.get(Calendar.DAY_OF_MONTH));
     }
+
+    @Test
+    public void testSaveTextbook() throws ParseException {
+        String title = "Game of peace";
+        int isbn = 230;
+        int authorId = 16;
+        String editor = "USA";
+        String date = "16-08-2022";
+        SimpleDateFormat time = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        Date dates = time.parse(date);
+
+        Textbook textbook = new Textbook(1,title, authorId, isbn, editor, dates);
+        textbookDao.save(textbook);
+    }
+
+
 }

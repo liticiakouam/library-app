@@ -1,13 +1,13 @@
-package com.softwify.library.service;
+package com.softwify.libraryAPP.service;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.model.Author;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryAPP.dao.AuthorDao;
+import com.softwify.libraryAPP.model.Author;
+import com.softwify.libraryAPP.util.OptionSelector;
 
 public class AuthorManager {
 
@@ -47,11 +47,8 @@ public class AuthorManager {
 					try {
 						processDelete(substring[1]);
 					} catch (ArrayIndexOutOfBoundsException e) {
-
 						logger.error("Veuillez entrer un  identifiant s'il vous plait");
-
 						logger.error("Veuillez saisir un identifiant apres \"delete.\"");
-
 					}
 					break;
 				}
@@ -79,7 +76,6 @@ public class AuthorManager {
 	public void processDelete(String inIdString){
 		try {
 			int id = Integer.parseInt(inIdString);
-
 			boolean deleted = delete(id);
 			if (deleted) {
 				returnToList();

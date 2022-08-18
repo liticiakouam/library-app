@@ -1,13 +1,16 @@
-package com.softwify.library;
+package com.softwify.libraryAPP;
 
 
-import com.softwify.library.dao.TextbookDao;
-import com.softwify.library.model.Textbook;
-import com.softwify.library.service.TextbookManager;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryAPP.dao.AuthorDao;
+import com.softwify.libraryAPP.dao.TextbookDao;
+import com.softwify.libraryAPP.model.Author;
+import com.softwify.libraryAPP.model.Textbook;
+import com.softwify.libraryAPP.service.TextbookManager;
+import com.softwify.libraryAPP.util.OptionSelector;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,7 +21,8 @@ import static org.mockito.Mockito.*;
 public class TextbookManagerTest {
     TextbookDao textbookDao = Mockito.mock(TextbookDao.class);
     OptionSelector optionSelector = Mockito.mock(OptionSelector.class);
-    TextbookManager textbookManager = new TextbookManager(textbookDao, optionSelector);
+    AuthorDao authorDao = Mockito.mock(AuthorDao.class);
+    TextbookManager textbookManager = new TextbookManager(textbookDao, optionSelector, authorDao);
 
     @Test
     public void testDisplayTextbooks() {
@@ -45,10 +49,10 @@ public class TextbookManagerTest {
 
     @Test
     public void testShouldReturnTrueWhenTextbookIsDisplayed() {
-        Textbook textbook = new Textbook(5, "super titre", "Liti", "kouam", 5, 1234, "paris", new Date());
-        when(textbookDao.getTextbookInformation(5)).thenReturn(textbook);
-        assertTrue(textbookManager.readTextbook(5));
-        verify(textbookDao, times(1)).getTextbookInformation(5);
+        Textbook textbook = new Textbook(6, "titre propre", "delor", "tity", 5, 1234, "USA", new Date());
+        when(textbookDao.getTextbookInformation(6)).thenReturn(textbook);
+        assertTrue(textbookManager.readTextbook(6));
+        verify(textbookDao, times(1)).getTextbookInformation(6);
     }
 
     @Test
@@ -57,4 +61,17 @@ public class TextbookManagerTest {
         assertFalse(textbookManager.readTextbook(5));
         verify(textbookDao, times(1)).getTextbookInformation(5);
     }
+
+    @Test
+    public void testTextbookRegistrationIs() throws ParseException {
+        when(optionSelector.readString()).thenReturn("Thione Niang");
+        when(optionSelector.readInt()).thenReturn(569);
+        when(optionSelector.readDate()).thenReturn("02-03-2020");
+        when(authorDao.checkExistingAuthor(any())).thenReturn(true);
+        when(authorDao.getByFirstNameAndLastName(any(), any())).thenReturn(new Author(1, "Thione", "Niang"));
+        textbookManager.processAdd();
+
+        verify(authorDao, times(1)).getByFirstNameAndLastName(any(), any());
+    }
+
 }
