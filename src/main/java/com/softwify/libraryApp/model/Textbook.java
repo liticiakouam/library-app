@@ -1,4 +1,4 @@
-package com.softwify.library.model;
+package com.softwify.libraryApp.model;
 
 import java.util.Date;
 
@@ -55,10 +55,6 @@ public class Textbook {
         this.isbn = isbn;
         this.editor = editor;
         this.publicationDate = publicationDate;
-    }
-
-    public Textbook(int id) {
-        this.id = id;
     }
 
     public int getId() {

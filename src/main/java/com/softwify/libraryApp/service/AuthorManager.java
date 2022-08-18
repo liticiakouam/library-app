@@ -1,13 +1,13 @@
-package com.softwify.library.service;
+package com.softwify.libraryApp.service;
 
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.model.Author;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryApp.dao.AuthorDao;
+import com.softwify.libraryApp.model.Author;
+import com.softwify.libraryApp.util.OptionSelector;
 
 public class AuthorManager {
 
@@ -63,7 +63,7 @@ public class AuthorManager {
 	}
 
 	public void displayAuthors() {
-		List<Author> authors = authorDao.getAuthors();
+		List<Author> authors = authorDao.getAll();
 
 		System.out.println("Liste des auteurs");
 		for (Author author : authors) {
@@ -85,7 +85,7 @@ public class AuthorManager {
 	}
 
 	public boolean delete(int id) {
-		boolean result = authorDao.deleteAuthor(id);
+		boolean result = authorDao.delete(id);
 
 		if (result) {
 			System.out.println("L'auteur et ses livres ont ete supprimes avec succes.");
@@ -121,7 +121,8 @@ public class AuthorManager {
 		}
 
 		Author author = new Author(firstName, lastName);
-		if (authorDao.checkExistingAuthor(author)) {
+		boolean checkExistingAuthor = authorDao.checkExistingAuthor(author);
+		if (checkExistingAuthor) {
 			logger.error("\nL'auteur " + author.getFullName() +" existe déjà.\nVeuillez reprendre s'il vous plaît.\n");
 			processSave();
 		} else {

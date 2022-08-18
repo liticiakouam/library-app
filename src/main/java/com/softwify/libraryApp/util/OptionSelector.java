@@ -1,4 +1,4 @@
-package com.softwify.library.util;
+package com.softwify.libraryApp.util;
 
 import java.util.Scanner;
 
@@ -21,6 +21,9 @@ public class OptionSelector {
 	}
 
 	public String readString() {
+		return scanner.nextLine();
+	}
+	public String readDate() {
 		return scanner.nextLine();
 	}
 }

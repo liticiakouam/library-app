@@ -1,18 +1,22 @@
-package com.softwify.library.integration;
+package com.softwify.libraryApp.integration;
 
-import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.dao.TextbookDao;
-import com.softwify.library.integration.config.DataBaseConfigTest;
-import com.softwify.library.integration.service.DataBasePrepareServiceTextbook;
-import com.softwify.library.model.Textbook;
+import com.softwify.libraryApp.configuration.DataBaseConfig;
+import com.softwify.libraryApp.dao.TextbookDao;
+import com.softwify.libraryApp.integration.config.DataBaseConfigTest;
+import com.softwify.libraryApp.integration.service.DataBasePrepareServiceTextbook;
+import com.softwify.libraryApp.model.Textbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class TextbookDaoTest {
     DataBaseConfig dataBaseConfig = new DataBaseConfigTest();
@@ -72,5 +76,19 @@ public class TextbookDaoTest {
         assertEquals(2022, calendar.get(Calendar.YEAR));
         assertEquals(7, calendar.get(Calendar.MONTH));
         assertEquals(2, calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Test
+    public void AddTexbookInfoSTest() throws ParseException {
+        String title = "la maison d'acote";
+        int isbn = 123;
+        int authorId = 16;
+        String editor = "paris";
+        String date= "03-10-2002";
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        Date convertedDate = formatter.parse(date);
+
+        Textbook textbook = new Textbook(1, title, authorId, isbn, editor, convertedDate);
+        textbookDao.save(textbook);
     }
 }

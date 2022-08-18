@@ -1,4 +1,4 @@
-package com.softwify.library.configuration;
+package com.softwify.libraryApp.configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

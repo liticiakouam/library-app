@@ -1,9 +1,10 @@
-package com.softwify.library.service;
+package com.softwify.libraryApp.service;
 
-import com.softwify.library.dao.TextbookDao;
-import com.softwify.library.model.Author;
-import com.softwify.library.model.Textbook;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryApp.dao.AuthorDao;
+import com.softwify.libraryApp.dao.TextbookDao;
+import com.softwify.libraryApp.model.Author;
+import com.softwify.libraryApp.model.Textbook;
+import com.softwify.libraryApp.util.OptionSelector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,10 +19,12 @@ public class TextbookManager {
         private static final Logger logger = LogManager.getLogger(TextbookManager.class.getSimpleName());
         private final TextbookDao textbookDao;
         private final OptionSelector optionSelector;
+        private final AuthorDao authorDao;
 
-        public TextbookManager(TextbookDao textbookDao, OptionSelector optionSelector) {
+        public TextbookManager(TextbookDao textbookDao, OptionSelector optionSelector, AuthorDao authorDao) {
             this.textbookDao = textbookDao;
             this.optionSelector = optionSelector;
+            this.authorDao = authorDao;
         }
 
         public void manage(){
@@ -38,7 +41,7 @@ public class TextbookManager {
                         "----------------------------------------------");
                 String input = optionSelector.readString();
                 input = input.trim().replaceAll("\\s+", " ");
-                String substring[] = input.split(" ");
+                String[]  substring= input.split(" ");
                 String option = substring[0];
                 switch (option){
                     case "back": {
@@ -145,75 +148,96 @@ public class TextbookManager {
         displayTextbooks();
     }
 
-    public void processAdd() throws ParseException {
-        System.out.println("\nAjout d'un nouveau livre");
+    public Author retrieveAuthorFullName() {
         System.out.print("Veuillez entrer le nom complet de l'auteur : ");
-        String authorFullName = null;
         String firstName = null;
         String lastName = null;
         try {
-            authorFullName = optionSelector.readString();
+            String authorFullName = optionSelector.readString();
             authorFullName = authorFullName.trim().replaceAll("\\s+", " ");
-            String substring[] = authorFullName.split(" ");
+            String[] substring = authorFullName.split(" ");
             firstName = substring[0];
             lastName = substring[1];
 
-        } catch (ArrayIndexOutOfBoundsException e){
+            while (firstName.isEmpty() || lastName.isEmpty()) {
+                authorFullName = optionSelector.readString();
+                authorFullName = authorFullName.trim().replaceAll("\\s+", " ");
+                substring = authorFullName.split(" ");
+                firstName = substring[0];
+                lastName = substring[1];
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
             logger.error("Nom et prenom requis");
         }
+        return new Author(firstName, lastName);
+    }
 
-        Author author = new Author(firstName, lastName);
-        if (textbookDao.checkExistingAuthor(author)) {
+    public void processAdd() throws ParseException {
+        System.out.println("\nAjout d'un nouveau livre");
 
-            System.out.print("Quel est le titre ? : ");
-            String titre = optionSelector.readString();
-            while (titre.isEmpty()) {
-                logger.error("Titre vide, veuillez reessayer");
-                System.out.print("Entrez le titre du livre : ");
-                titre = optionSelector.readString();
-            }
-
-            System.out.print("Entrez le numéro ISBN : ");
-            String isbn = optionSelector.readString();
-            int  isbnInt = Integer.parseInt(isbn);
-            while (titre.isEmpty()) {
-                logger.error("ISBN vide, veuillez reessayer");
-                System.out.print("Entrez le ISBN du livre : ");
-                isbn = optionSelector.readString();
-                isbnInt = Integer.parseInt(isbn);
-            }
-
-            System.out.print("L'éditeur du livre : ");
-            String editeur = optionSelector.readString();
-            while (editeur.isEmpty()) {
-                logger.error("Editeur vide veuillez reessayer");
-                System.out.print("Entrez l'editeur du livre : ");
-                editeur = optionSelector.readString();
-            }
-            System.out.print("Année de publication : ");
-            String date = optionSelector.readString();
-            Date convertedDate = null;
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-            convertedDate = formatter.parse(date);
-
-            while (date.isEmpty()) {
-                    logger.error("date vide, veuillez reessayer");
-                    System.out.print("Année de publication : : ");
-                    date = optionSelector.readString();
-                    formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-                    convertedDate = formatter.parse(date);
-            }
-            Textbook validTextbook = textbookDao.getValidTextbook(firstName, lastName);
-            int authorId = validTextbook.getId();
-            Textbook textbook =  new Textbook(1, titre, authorId, isbnInt, editeur, convertedDate);
-            Textbook addedTextbook = textbookDao.save(textbook);
-            if (addedTextbook != null){
-                System.out.println("\nLe livre " + textbook.getTitle() + " a été rajouté avec succès.\n");
-                displayTextbooks();
+        Author author = retrieveAuthorFullName();
+        if(author.getFirstName() != null && author.getLastName() != null){
+            Author existingAuthor = authorDao.getByFirstNameAndLastName(author.getFirstName(), author.getLastName());
+            if(existingAuthor != null) {
+                Textbook textbook = retrieveBookInformation(existingAuthor.getId());
+                saveBook(textbook);
+            } else {
+                logger.error("L'auteur " + author.getFullName() + " n'existe pas");
+                processAdd();
             }
         } else {
-            logger.error("L'auteur " +author.getFullName() + " n'existe pas");
+            logger.error("s'il vous plait veuillez entrer le nom et le pronom de l'auteur");
             processAdd();
         }
+    }
+
+    public Textbook retrieveBookInformation(int authorId) throws ParseException {
+        System.out.print("Quel est le titre ? : ");
+        String title = optionSelector.readString();
+        while (title.isEmpty()) {
+            logger.error("Titre vide, veuillez reessayer");
+            System.out.print("Entrez le titre du livre : ");
+            title = optionSelector.readString();
+        }
+
+        System.out.print("Entrez le numéro ISBN : ");
+        int isbnInt = optionSelector.readInt();
+        while (isbnInt == 0) {
+            logger.error("ISBN vide, veuillez reessayer");
+            System.out.print("Entrez le ISBN du livre : ");
+            isbnInt = optionSelector.readInt();
+        }
+
+        System.out.print("L'éditeur du livre : ");
+        String editor = optionSelector.readString();
+        while (editor.isEmpty()) {
+            logger.error("Editeur vide veuillez reessayer");
+            System.out.print("Entrez l'editeur du livre : ");
+            editor = optionSelector.readString();
+        }
+        System.out.print("Année de publication : ");
+        String date = optionSelector.readDate();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        Date convertedDate = formatter.parse(date);
+
+        while (date.isEmpty()) {
+            logger.error("date vide, veuillez reessayer");
+            System.out.print("Année de publication : : ");
+            date = optionSelector.readDate();
+            formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+            convertedDate = formatter.parse(date);
+        }
+
+        return new Textbook(-1, title, authorId, isbnInt, editor, convertedDate);
+    }
+
+    private void saveBook(Textbook textbook){
+        Textbook addedTextbook = textbookDao.save(textbook);
+        if (addedTextbook != null){
+            System.out.println("\nLe livre " + textbook.getTitle() + " a été rajouté avec succès.\n");
+        } else {
+            logger.error("Une erreur est survenue");
+        }
+        returnToList();
     }
 }

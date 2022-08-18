@@ -1,8 +1,8 @@
-package com.softwify.library.integration.service;
+package com.softwify.libraryApp.integration.service;
 
 import java.sql.Connection;
 
-import com.softwify.library.integration.config.DataBaseConfigTest;
+import com.softwify.libraryApp.integration.config.DataBaseConfigTest;
 
 public class DataBasePrepareService {
 	DataBaseConfigTest dataBaseTestConfig = new DataBaseConfigTest();

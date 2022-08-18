@@ -1,6 +1,6 @@
-package com.softwify.library;
+package com.softwify.libraryApp;
 
-import com.softwify.library.service.LibraryMenu;
+import com.softwify.libraryApp.service.LibraryMenu;
 
 public class LibraryApplication {
 

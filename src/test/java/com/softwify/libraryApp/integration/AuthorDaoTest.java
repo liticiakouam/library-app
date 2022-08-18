@@ -1,4 +1,4 @@
-package com.softwify.library.integration;
+package com.softwify.libraryApp.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,11 +7,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.softwify.library.configuration.DataBaseConfig;
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.integration.config.DataBaseConfigTest;
-import com.softwify.library.integration.service.DataBasePrepareService;
-import com.softwify.library.model.Author;
+import com.softwify.libraryApp.configuration.DataBaseConfig;
+import com.softwify.libraryApp.dao.AuthorDao;
+import com.softwify.libraryApp.integration.config.DataBaseConfigTest;
+import com.softwify.libraryApp.integration.service.DataBasePrepareService;
+import com.softwify.libraryApp.model.Author;
 
 public class AuthorDaoTest {
 
@@ -26,7 +26,7 @@ public class AuthorDaoTest {
 
 	@Test
 	public void getAuthorsReturnsExpectedSizeAndAuthorsOrderByFullName() {
-		List<Author> authors = authorDao.getAuthors();
+		List<Author> authors = authorDao.getAll();
 		assertEquals("Napoleon Hill", authors.get(0).getFullName());
 		assertEquals("Pierre-Yves Mcsween", authors.get(1).getFullName());
 		assertEquals("Thione Niang", authors.get(2).getFullName());
@@ -36,11 +36,11 @@ public class AuthorDaoTest {
 
 	@Test
 	public void givenIdDeleteAuthorRemovesCorrespondingAuthor() {
-		assertEquals(4, authorDao.getAuthors().size());
-		boolean deleted = authorDao.deleteAuthor(3);
+		assertEquals(4, authorDao.getAll().size());
+		boolean deleted = authorDao.delete(3);
 		assertTrue(deleted);
 
-		List<Author> authors = authorDao.getAuthors();
+		List<Author> authors = authorDao.getAll();
 		assertEquals(3, authors.size());
 
 		for (Author author : authors) {
@@ -57,7 +57,7 @@ public class AuthorDaoTest {
 	public void insertAuthor() {
 		Author authorAdd = new Author("liti", "kouam");
 		authorDao.save(authorAdd);
-		assertEquals(5, authorDao.getAuthors().size());
+		assertEquals(5, authorDao.getAll().size());
 	}
 
 	@Test
@@ -73,5 +73,4 @@ public class AuthorDaoTest {
 		boolean check = authorDao.checkExistingAuthor(author);
 		assertFalse(check);
 	}
-
 }

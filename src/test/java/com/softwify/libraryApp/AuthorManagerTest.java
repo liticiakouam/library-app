@@ -1,4 +1,4 @@
-package com.softwify.library;
+package com.softwify.libraryApp;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -6,14 +6,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.softwify.library.model.Author;
-import javafx.beans.binding.When;
+import com.softwify.libraryApp.model.Author;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.service.AuthorManager;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryApp.dao.AuthorDao;
+import com.softwify.libraryApp.service.AuthorManager;
+import com.softwify.libraryApp.util.OptionSelector;
 
 class AuthorManagerTest {
 
@@ -24,24 +23,24 @@ class AuthorManagerTest {
 	@Test
 	public void testDisplayAuthors() {
 		authorManager.displayAuthors();
-		verify(authorDao, times(1)).getAuthors();
+		verify(authorDao, times(1)).getAll();
 	}
 
 	@Test
 	public void deleteAuthorShouldReturnFalseWhenDaoReturnFalse() {
-		when(authorDao.deleteAuthor(anyInt())).thenReturn(false);
+		when(authorDao.delete(anyInt())).thenReturn(false);
 
 		boolean deleted = authorManager.delete(10);
 		assertFalse(deleted);
-		verify(authorDao, times(1)).deleteAuthor(10);
+		verify(authorDao, times(1)).delete(10);
 	}
 
 	@Test
 	public void deleteAuthorShouldReturnTrueWhenDaoReturnTrue() {
-		when(authorDao.deleteAuthor(anyInt())).thenReturn(true);
+		when(authorDao.delete(anyInt())).thenReturn(true);
 		boolean deleted = authorManager.delete(10);
 		assertTrue(deleted);
-		verify(authorDao, times(1)).deleteAuthor(10);
+		verify(authorDao, times(1)).delete(10);
 	}
 
 	@Test

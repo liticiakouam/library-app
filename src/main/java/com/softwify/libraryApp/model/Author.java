@@ -1,4 +1,4 @@
-package com.softwify.library.model;
+package com.softwify.libraryApp.model;
 
 public class Author {
 	private int id;
@@ -16,7 +16,7 @@ public class Author {
 		this.lastName = lastName;
 	}
 
-	public String getFirstName() {
+    public String getFirstName() {
 		return firstName;
 	}
 
