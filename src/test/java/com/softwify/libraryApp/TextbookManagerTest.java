@@ -73,4 +73,18 @@ public class TextbookManagerTest {
 
         verify(authorDao, times(1)).getByFirstNameAndLastName(any(), any());
     }
+
+
+
+    @Test
+    public void kRegistrationTest() throws ParseException {
+        when(optionSelector.readString()).thenReturn("Thione Niang");
+        when(optionSelector.readInt()).thenReturn(569);
+        when(optionSelector.readDate()).thenReturn("02-03-2020");
+        when(authorDao.checkExistingAuthor(any())).thenReturn(true);
+        when(authorDao.getByFirstNameAndLastName(any(), any())).thenReturn(new Author(1, "Thione", "Niang"));
+        textbookManager.processAdd();
+
+        verify(authorDao, times(1)).getByFirstNameAndLastName(any(), any());
+    }
 }
