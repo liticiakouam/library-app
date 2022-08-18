@@ -1,4 +1,4 @@
-package com.softwify.library;
+package com.softwify.libraryAPP;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -6,16 +6,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.softwify.library.model.Author;
-
-import javafx.beans.binding.When;
-
+import com.softwify.libraryAPP.model.Author;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.softwify.library.dao.AuthorDao;
-import com.softwify.library.service.AuthorManager;
-import com.softwify.library.util.OptionSelector;
+import com.softwify.libraryAPP.dao.AuthorDao;
+import com.softwify.libraryAPP.service.AuthorManager;
+import com.softwify.libraryAPP.util.OptionSelector;
 
 class AuthorManagerTest {
 
@@ -47,17 +44,11 @@ class AuthorManagerTest {
 	}
 
 	@Test
-
 	public void insertAuthorSTest() {
-		String name = "liticia";
+		String name = "delor";
 		//Author author = new Author(1, name, name);
 		when(optionSelector.readString()).thenReturn(name);
 		//when(authorDao.save(any(Author.class))).thenReturn(author);
-
-	public void insertAuthorShouldReturnTrueWhenDaoReturnTrue() {
-		String name = "liticia";
-		when(optionSelector.readString()).thenReturn(name);
-
 		authorManager.processSave();
 		verify(authorDao, times(1)).save(any(Author.class));
 		verify(authorDao, times(1)).checkExistingAuthor(any(Author.class));

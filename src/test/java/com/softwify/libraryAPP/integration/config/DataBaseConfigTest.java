@@ -1,4 +1,4 @@
-package com.softwify.library.integration.config;
+package com.softwify.libraryAPP.integration.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.softwify.library.configuration.DataBaseConfig;
+import com.softwify.libraryAPP.configuration.DataBaseConfig;
 
 public class DataBaseConfigTest extends DataBaseConfig {
 	private static final Logger logger = LogManager.getLogger("ConfigurationTest");
